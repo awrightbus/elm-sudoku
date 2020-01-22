@@ -32,6 +32,56 @@ type alias Board =
     List Cell
 
 
+solve : Board -> Board
+solve b =
+    case emptyCell b of
+        Nothing ->
+            b
+
+        Just a ->
+            case findPossibilites b a of
+                Nothing ->
+                    False
+            
+                option2 ->
+                    
+            
+
+
+
+-- def solve(bo):
+--     find = find_empty(bo)
+--     if not find:
+--         return True
+--     else:
+--         row, col = find
+--     for i in range(1,10):
+--         if valid(bo, i, (row, col)):
+--             bo[row][col] = i
+--             if solve(bo):
+--                 return True
+--             bo[row][col] = 0
+--     return False
+
+
+emptyCell : Board -> Maybe Cell
+emptyCell b =
+    List.head (List.filter (\( _, val ) -> val == Nothing) b)
+
+
+changeCellValue : Board -> Cell -> Value -> Board
+changeCellValue b ( pos, _ ) v =
+    List.map
+        (\( p, val ) ->
+            if pos == p then
+                ( p, Just v )
+
+            else
+                ( p, val )
+        )
+        b
+
+
 findPossibilities : Cell -> Board -> List (Maybe Value)
 findPossibilities c b =
     let
