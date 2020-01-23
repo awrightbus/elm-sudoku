@@ -1,5 +1,13 @@
 module Sudoku exposing (..)
 
+import Browser
+import Html exposing (Html, table, text, tr)
+import Html.Attributes exposing (class, value)
+
+
+
+--Sudoku Structure Logic
+
 
 type Value
     = One
@@ -28,24 +36,16 @@ type alias Cell =
     ( Pos, Maybe Value )
 
 
-type alias Board =
+
+--Block is a row/cell/block of size 9
+
+
+type alias Block =
     List Cell
 
 
-solve : Board -> Board
-solve b =
-    case emptyCell b of
-        Nothing ->
-            b
-
-        Just a ->
-            case findPossibilites b a of
-                Nothing ->
-                    False
-            
-                option2 ->
-                    
-            
+type alias Board =
+    List Cell
 
 
 
@@ -62,6 +62,38 @@ solve b =
 --                 return True
 --             bo[row][col] = 0
 --     return False
+
+
+size : Int
+size =
+    9
+
+
+emptyBoard : Board
+emptyBoard =
+    List.concatMap (\idx -> List.map (\idy -> ( { x = idx, y = idy }, Nothing )) (List.range 1 size)) (List.range 1 size)
+
+
+rows b =
+    let
+        numRow =
+            List.range 1 9
+
+        rowCells =
+            List.map (\idx -> List.filter (\( pos, _ ) -> pos.x == idx) b) numRow
+    in
+    rowCells
+
+
+cols b =
+    let
+        numRow =
+            List.range 1 9
+
+        rowCells =
+            List.concatMap (\idy -> List.map (\( pos, _ ) -> pos.y == idy) b) numRow
+    in
+    rowCells
 
 
 emptyCell : Board -> Maybe Cell
@@ -142,3 +174,108 @@ inBlock ( pos, _ ) b v =
             List.map (\( _, val ) -> val) block
     in
     List.member v blockValues
+
+
+
+--Sudoku Viewing Logic
+
+
+showValue : Maybe Value -> String
+showValue v =
+    case v of
+        Just One ->
+            "1"
+
+        Just Two ->
+            "2"
+
+        Just Three ->
+            "3"
+
+        Just Four ->
+            "4"
+
+        Just Five ->
+            "5"
+
+        Just Six ->
+            "6"
+
+        Just Seven ->
+            "7"
+
+        Just Eight ->
+            "8"
+
+        Just Nine ->
+            "9"
+
+        Nothing ->
+            " "
+
+
+showCell : Cell -> Html Msg
+showCell ( _, val ) =
+    Html.td [ class "cell" ]
+        [ Html.input [ Html.Attributes.value (showValue val) ] []
+        ]
+
+
+showRow : List Cell -> Html Msg
+showRow cs =
+    Html.tr [ class "row" ]
+        (List.map (\c -> showCell c) cs)
+
+
+showBoard : Board -> Html Msg
+showBoard b =
+    Html.div [ class "board" ]
+        [ Html.table
+            [ class "center" ]
+            (List.map (\r -> showRow r) (rows b))
+        ]
+
+
+
+-- Browser Logic
+
+
+main : Program () Model Msg
+main =
+    Browser.sandbox
+        { init = init
+        , view = view
+        , update = update
+        }
+
+
+type alias Model =
+    { sboard : Board
+    }
+
+
+init : Model
+init =
+    { sboard = emptyBoard
+    }
+
+
+view : Model -> Html Msg
+view model =
+    Html.div
+        [ class "center" ]
+        [ Html.h1
+            [ class "header" ]
+            [ Html.text "Elm Sudoku Solver" ]
+        , showBoard model.sboard
+        , Html.button [ class "button" ] [ Html.text "Solve It" ]
+        ]
+
+
+type Msg
+    = ClickedCell
+
+
+update : Msg -> Model -> Model
+update _ model =
+    model

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sudoku Solver</title>
+    <style>
+        .board{
+            width: 800px;
+            margin: auto;
+        }
+        .center{
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cell{
+            width: 60px;
+            height: 60px;
+            background-color: aqua;
+            border: black solid 2px;
+        }
+        .cell:hover{
+            background-color: red;
+        }
+        .header{
+            font-size: 50px;
+            text-align: center;
+        }
+        .button{
+            font-size: 30px;
+            text-align: center;
+        }
+        input{
+            border: none;
+            color: transparent;
+            text-shadow: 0 0 0 black;
+            text-align: center;
+            width: 60px;
+            height: 60px;
+            font-size: 48px;
+            
+        }
+        input:focus{
+            outline: none;
+        }
+        input.middle:focus{
+            outline-width: 0;
+        }
+        tr:nth-child(3){
+            border-bottom: black;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="elm.js"></script>
+    <script>
+        Elm.Sudoku.init({node:document.getElementById("app")})
+    </script>
+</body>
+</html>
