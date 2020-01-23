@@ -3,6 +3,7 @@ module Sudoku exposing (..)
 import Browser
 import Html exposing (Html, table, text, tr)
 import Html.Attributes exposing (class, value)
+import Html.Events exposing (onInput)
 
 
 
@@ -19,6 +20,40 @@ type Value
     | Seven
     | Eight
     | Nine
+
+
+strToVal : String -> Maybe Value
+strToVal s =
+    case s of
+        "1" ->
+            Just One
+
+        "2" ->
+            Just Two
+
+        "3" ->
+            Just Three
+
+        "4" ->
+            Just Four
+
+        "5" ->
+            Just Five
+
+        "6" ->
+            Just Six
+
+        "7" ->
+            Just Seven
+
+        "8" ->
+            Just Eight
+
+        "9" ->
+            Just Nine
+
+        _ ->
+            Nothing
 
 
 values : List (Maybe Value)
@@ -215,9 +250,9 @@ showValue v =
 
 
 showCell : Cell -> Html Msg
-showCell ( _, val ) =
+showCell ( pos, val ) =
     Html.td [ class "cell" ]
-        [ Html.input [ Html.Attributes.value (showValue val) ] []
+        [ Html.input [ Html.Attributes.value (showValue val), Html.Events.onInput (EditedCell ( pos, val )) ] []
         ]
 
 
@@ -250,8 +285,7 @@ main =
 
 
 type alias Model =
-    { sboard : Board
-    }
+    { sboard : Board }
 
 
 init : Model
@@ -273,9 +307,24 @@ view model =
 
 
 type Msg
-    = ClickedCell
+    = EditedCell Cell String
 
 
 update : Msg -> Model -> Model
-update _ model =
-    model
+update msg model =
+    case msg of
+        EditedCell c s ->
+            { model | sboard = updateCell model.sboard c (strToVal s) }
+
+
+updateCell : Board -> Cell -> Maybe Value -> Board
+updateCell b ( p, _ ) value =
+    List.map
+        (\( pos, val ) ->
+            if pos == p then
+                ( pos, value )
+
+            else
+                ( pos, val )
+        )
+        b

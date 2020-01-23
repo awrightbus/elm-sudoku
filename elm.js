@@ -5196,9 +5196,64 @@ var $elm$browser$Browser$sandbox = function (impl) {
 			view: impl.view
 		});
 };
+var $author$project$Sudoku$Eight = {$: 'Eight'};
+var $author$project$Sudoku$Five = {$: 'Five'};
+var $author$project$Sudoku$Four = {$: 'Four'};
+var $author$project$Sudoku$Nine = {$: 'Nine'};
+var $author$project$Sudoku$One = {$: 'One'};
+var $author$project$Sudoku$Seven = {$: 'Seven'};
+var $author$project$Sudoku$Six = {$: 'Six'};
+var $author$project$Sudoku$Three = {$: 'Three'};
+var $author$project$Sudoku$Two = {$: 'Two'};
+var $author$project$Sudoku$strToVal = function (s) {
+	switch (s) {
+		case '1':
+			return $elm$core$Maybe$Just($author$project$Sudoku$One);
+		case '2':
+			return $elm$core$Maybe$Just($author$project$Sudoku$Two);
+		case '3':
+			return $elm$core$Maybe$Just($author$project$Sudoku$Three);
+		case '4':
+			return $elm$core$Maybe$Just($author$project$Sudoku$Four);
+		case '5':
+			return $elm$core$Maybe$Just($author$project$Sudoku$Five);
+		case '6':
+			return $elm$core$Maybe$Just($author$project$Sudoku$Six);
+		case '7':
+			return $elm$core$Maybe$Just($author$project$Sudoku$Seven);
+		case '8':
+			return $elm$core$Maybe$Just($author$project$Sudoku$Eight);
+		case '9':
+			return $elm$core$Maybe$Just($author$project$Sudoku$Nine);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Sudoku$updateCell = F3(
+	function (b, _v0, value) {
+		var p = _v0.a;
+		return A2(
+			$elm$core$List$map,
+			function (_v1) {
+				var pos = _v1.a;
+				var val = _v1.b;
+				return _Utils_eq(pos, p) ? _Utils_Tuple2(pos, value) : _Utils_Tuple2(pos, val);
+			},
+			b);
+	});
 var $author$project$Sudoku$update = F2(
-	function (_v0, model) {
-		return model;
+	function (msg, model) {
+		var c = msg.a;
+		var s = msg.b;
+		return _Utils_update(
+			model,
+			{
+				sboard: A3(
+					$author$project$Sudoku$updateCell,
+					model.sboard,
+					c,
+					$author$project$Sudoku$strToVal(s))
+			});
 	});
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$json$Json$Encode$string = _Json_wrap;
@@ -5239,7 +5294,45 @@ var $author$project$Sudoku$rows = function (b) {
 		numRow);
 	return rowCells;
 };
+var $author$project$Sudoku$EditedCell = F2(
+	function (a, b) {
+		return {$: 'EditedCell', a: a, b: b};
+	});
 var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
 var $author$project$Sudoku$showValue = function (v) {
 	if (v.$ === 'Just') {
 		switch (v.a.$) {
@@ -5272,12 +5365,13 @@ var $author$project$Sudoku$showValue = function (v) {
 				return '9';
 		}
 	} else {
-		return ' ';
+		return '';
 	}
 };
 var $elm$html$Html$td = _VirtualDom_node('td');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $author$project$Sudoku$showCell = function (_v0) {
+	var pos = _v0.a;
 	var val = _v0.b;
 	return A2(
 		$elm$html$Html$td,
@@ -5292,7 +5386,10 @@ var $author$project$Sudoku$showCell = function (_v0) {
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$value(
-						$author$project$Sudoku$showValue(val))
+						$author$project$Sudoku$showValue(val)),
+						$elm$html$Html$Events$onInput(
+						$author$project$Sudoku$EditedCell(
+							_Utils_Tuple2(pos, val)))
 					]),
 				_List_Nil)
 			]));
