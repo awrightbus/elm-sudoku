@@ -211,7 +211,7 @@ showValue v =
             "9"
 
         Nothing ->
-            " "
+            ""
 
 
 showCell : Cell -> Html Msg
