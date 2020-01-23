@@ -91,7 +91,7 @@ cols b =
             List.range 1 9
 
         rowCells =
-            List.concatMap (\idy -> List.map (\( pos, _ ) -> pos.y == idy) b) numRow
+            List.map (\idy -> List.map (\( pos, _ ) -> pos.y == idy) b) numRow
     in
     rowCells
 
