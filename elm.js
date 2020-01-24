@@ -5597,16 +5597,11 @@ var $author$project$Sudoku$findPossibilities = F2(
 		var block = A2($author$project$Sudoku$inBlock, c, b);
 		var answer = A2(
 			$author$project$Sudoku$filterOut,
-			function (x) {
-				return _Utils_eq(x, $elm$core$Maybe$Nothing);
-			},
+			block,
 			A2(
 				$author$project$Sudoku$filterOut,
-				block,
-				A2(
-					$author$project$Sudoku$filterOut,
-					col,
-					A2($author$project$Sudoku$filterOut, row, $author$project$Sudoku$values))));
+				col,
+				A2($author$project$Sudoku$filterOut, row, $author$project$Sudoku$values)));
 		return answer;
 	});
 var $author$project$Sudoku$updateCell = F3(
@@ -5621,11 +5616,11 @@ var $author$project$Sudoku$updateCell = F3(
 			},
 			b);
 	});
-var $author$project$Sudoku$inferredCells = function (b) {
-	inferredCells:
+var $author$project$Sudoku$solveBoard = function (b) {
+	solveBoard:
 	while (true) {
 		var allEmpty = $author$project$Sudoku$emptyCells(b);
-		var infered = A2(
+		var inferred = A2(
 			$elm$core$List$filter,
 			function (x) {
 				return $elm$core$List$length(
@@ -5637,13 +5632,13 @@ var $author$project$Sudoku$inferredCells = function (b) {
 			function (cell) {
 				return A2($author$project$Sudoku$updateCell, b, cell);
 			},
-			infered);
+			inferred);
 		var valuesT = A2(
 			$elm$core$List$concatMap,
 			function (cell) {
 				return A2($author$project$Sudoku$findPossibilities, cell, b);
 			},
-			infered);
+			inferred);
 		var boards = A3(
 			$elm$core$List$map2,
 			F2(
@@ -5658,91 +5653,7 @@ var $author$project$Sudoku$inferredCells = function (b) {
 			var x = boards.a;
 			var $temp$b = x;
 			b = $temp$b;
-			continue inferredCells;
-		}
-	}
-};
-var $author$project$Sudoku$changeCellValue = F3(
-	function (b, _v0, v) {
-		var pos = _v0.a;
-		return A2(
-			$elm$core$List$map,
-			function (_v1) {
-				var p = _v1.a;
-				var val = _v1.b;
-				return _Utils_eq(pos, p) ? _Utils_Tuple2(
-					p,
-					$elm$core$Maybe$Just(v)) : _Utils_Tuple2(p, val);
-			},
-			b);
-	});
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $author$project$Sudoku$emptyCell = function (b) {
-	return $elm$core$List$head(
-		$elm$core$List$reverse(
-			A2(
-				$elm$core$List$filter,
-				function (_v0) {
-					var val = _v0.b;
-					return _Utils_eq(val, $elm$core$Maybe$Nothing);
-				},
-				b)));
-};
-var $author$project$Sudoku$solveBoard = function (b) {
-	var _v0 = function () {
-		var _v1 = $author$project$Sudoku$emptyCell(b);
-		if (_v1.$ === 'Nothing') {
-			return _Utils_Tuple2(
-				_Utils_Tuple2(
-					{x: 0, y: 0},
-					$elm$core$Maybe$Nothing),
-				true);
-		} else {
-			var c = _v1.a;
-			return _Utils_Tuple2(c, false);
-		}
-	}();
-	var celltofill = _v0.a;
-	var solved = _v0.b;
-	var possibleBoards = function () {
-		var _v3 = A2($author$project$Sudoku$findPossibilities, celltofill, b);
-		if ((_v3.b && (_v3.a.$ === 'Nothing')) && (!_v3.b.b)) {
-			var _v4 = _v3.a;
-			return _List_fromArray(
-				[$author$project$Sudoku$emptyBoard]);
-		} else {
-			var ls = _v3;
-			return A2(
-				$elm$core$List$map,
-				function (x) {
-					if (x.$ === 'Nothing') {
-						return A3($author$project$Sudoku$changeCellValue, b, celltofill, $author$project$Sudoku$One);
-					} else {
-						var v = x.a;
-						return A3($author$project$Sudoku$changeCellValue, b, celltofill, v);
-					}
-				},
-				ls);
-		}
-	}();
-	var nextStep = A2($elm$core$List$map, $author$project$Sudoku$solveBoard, possibleBoards);
-	if (solved) {
-		return $elm$core$Maybe$Just(b);
-	} else {
-		var _v2 = $elm$core$List$head(nextStep);
-		if (_v2.$ === 'Nothing') {
-			return $elm$core$Maybe$Just(b);
-		} else {
-			var c = _v2.a;
-			return c;
+			continue solveBoard;
 		}
 	}
 };
@@ -5786,22 +5697,10 @@ var $author$project$Sudoku$update = F2(
 							$author$project$Sudoku$strToVal(s))
 					});
 			case 'ClickedSolved':
-				var _v1 = $author$project$Sudoku$solveBoard(model.sboard);
-				if (_v1.$ === 'Nothing') {
-					return _Utils_update(
-						model,
-						{sboard: model.sboard});
-				} else {
-					var newBoard = _v1.a;
-					return _Utils_update(
-						model,
-						{sboard: newBoard});
-				}
-			case 'FillInferred':
 				return _Utils_update(
 					model,
 					{
-						sboard: $author$project$Sudoku$inferredCells(model.sboard)
+						sboard: $author$project$Sudoku$solveBoard(model.sboard)
 					});
 			default:
 				return _Utils_update(
@@ -5811,7 +5710,6 @@ var $author$project$Sudoku$update = F2(
 	});
 var $author$project$Sudoku$ClearBoard = {$: 'ClearBoard'};
 var $author$project$Sudoku$ClickedSolved = {$: 'ClickedSolved'};
-var $author$project$Sudoku$FillInferred = {$: 'FillInferred'};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -6027,17 +5925,6 @@ var $author$project$Sudoku$view = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Solve It')
-					])),
-				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('button'),
-						$elm$html$Html$Events$onClick($author$project$Sudoku$FillInferred)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Fill Inferred')
 					])),
 				A2(
 				$elm$html$Html$button,

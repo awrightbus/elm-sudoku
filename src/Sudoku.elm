@@ -169,22 +169,22 @@ exampleBoard =
     ]
 
 
-inferredCells : Board -> Board
-inferredCells b =
+solveBoard : Board -> Board
+solveBoard b =
     let
         allEmpty =
             emptyCells b
 
-        infered =
+        inferred =
             List.filter
                 (\x -> List.length (findPossibilities x b) == 1)
                 allEmpty
 
         valuesT =
-            List.concatMap (\cell -> findPossibilities cell b) infered
+            List.concatMap (\cell -> findPossibilities cell b) inferred
 
         needValue =
-            List.map (\cell -> updateCell b cell) infered
+            List.map (\cell -> updateCell b cell) inferred
 
         boards =
             List.map2 (\fn value -> fn value) needValue valuesT
@@ -194,64 +194,7 @@ inferredCells b =
             b
 
         x :: _ ->
-            inferredCells x
-
-
-solveBoard : Board -> Maybe Board
-solveBoard b =
-    let
-        ( celltofill, solved ) =
-            case emptyCell b of
-                Nothing ->
-                    ( ( { x = 0, y = 0 }, Nothing ), True )
-
-                Just c ->
-                    ( c, False )
-
-        possibleBoards =
-            case findPossibilities celltofill b of
-                [ Nothing ] ->
-                    [ emptyBoard ]
-
-                ls ->
-                    List.map
-                        (\x ->
-                            case x of
-                                Nothing ->
-                                    changeCellValue b celltofill One
-
-                                Just v ->
-                                    changeCellValue b celltofill v
-                        )
-                        ls
-
-        nextStep =
-            List.map solveBoard possibleBoards
-    in
-    if solved then
-        Just b
-
-    else
-        case List.head nextStep of
-            Nothing ->
-                Just b
-
-            Just c ->
-                c
-
-
-isSolved : Board -> Bool
-isSolved b =
-    case emptyCell b of
-        Nothing ->
-            if hasConflicts b then
-                False
-
-            else
-                True
-
-        Just c ->
-            False
+            solveBoard x
 
 
 
@@ -315,19 +258,6 @@ emptyCells b =
     List.filter (\( _, val ) -> val == Nothing) b
 
 
-changeCellValue : Board -> Cell -> Value -> Board
-changeCellValue b ( pos, _ ) v =
-    List.map
-        (\( p, val ) ->
-            if pos == p then
-                ( p, Just v )
-
-            else
-                ( p, val )
-        )
-        b
-
-
 findPossibilities : Cell -> Board -> List (Maybe Value)
 findPossibilities c b =
     let
@@ -345,14 +275,8 @@ findPossibilities c b =
                 |> filterOut row
                 |> filterOut col
                 |> filterOut block
-                |> filterOut (\x -> x == Nothing)
     in
     answer
-
-
-hasConflicts : Board -> Bool
-hasConflicts b =
-    True
 
 
 filterOut : (a -> Bool) -> List a -> List a
@@ -491,7 +415,6 @@ view model =
             [ Html.text "Elm Sudoku Solver" ]
         , showBoard model.sboard
         , Html.button [ class "button", Html.Events.onClick ClickedSolved ] [ Html.text "Solve It" ]
-        , Html.button [ class "button", Html.Events.onClick FillInferred ] [ Html.text "Fill Inferred" ]
         , Html.button [ class "button", Html.Events.onClick ClearBoard ] [ Html.text "Clear" ]
         ]
 
@@ -499,7 +422,6 @@ view model =
 type Msg
     = EditedCell Cell String
     | ClickedSolved
-    | FillInferred
     | ClearBoard
 
 
@@ -510,15 +432,7 @@ update msg model =
             { model | sboard = updateCell model.sboard c (strToVal s) }
 
         ClickedSolved ->
-            case solveBoard model.sboard of
-                Nothing ->
-                    { model | sboard = model.sboard }
-
-                Just newBoard ->
-                    { model | sboard = newBoard }
-
-        FillInferred ->
-            { model | sboard = inferredCells model.sboard }
+            { model | sboard = solveBoard model.sboard }
 
         ClearBoard ->
             { model | sboard = emptyBoard }
