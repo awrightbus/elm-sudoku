@@ -71,14 +71,6 @@ type alias Cell =
     ( Pos, Maybe Value )
 
 
-
---Block is a row/cell/block of size 9
-
-
-type alias Block =
-    List Cell
-
-
 type alias Board =
     List Cell
 
@@ -195,25 +187,6 @@ solveBoard b =
 
         x :: _ ->
             solveBoard x
-
-
-
--- findPossibilities
--- map changeValue c b findPossibilities list of boards possible
--- filter allBoards that
--- def solve(bo):
---     find = find_empty(bo) 1.Find Empty Cell
---     if not find:
---         return True
---     else:
---         row, col = find
---     for i in range(1,10): 2. Find all values for that cell
---         if valid(bo, i, (row, col)): 3. that are valid
---             bo[row][col] = i 4.Create boards with those values
---             if solve(bo): recurse
---                 return True
---             bo[row][col] = 0
---     return False
 
 
 size : Int
