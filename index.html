@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sudoku Solver</title>
     <style>
+        table{
+            border-collapse: collapse;
+        }
         .board{
             width: 800px;
             margin: auto;
@@ -17,11 +20,11 @@
         .cell{
             width: 60px;
             height: 60px;
-            background-color: aqua;
+            
             border: black solid 2px;
         }
         .cell:hover{
-            background-color: red;
+            background-color: rgba(142, 186, 197, 0);
         }
         .header{
             font-size: 50px;
@@ -42,14 +45,31 @@
             
         }
         input:focus{
-            outline: none;
+            outline-style:  solid;
+            outline-color: black;
         }
-        input.middle:focus{
+        /* input.middle:focus{
             outline-width: 0;
-        }
-        tr:nth-child(3){
-            border-bottom: black;
-        }
+        } */
+        table {
+  margin:1em auto;
+}
+
+td:first-child {
+  border-left:solid;
+}
+td:nth-child(3n) {
+  border-right:solid ;
+}
+tr:first-child {
+  border-top:solid;
+  
+}
+tr:nth-child(3n) td {
+  border-bottom:solid ;
+  
+}
+
         
     </style>
 </head>

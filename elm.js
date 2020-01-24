@@ -80,87 +80,6 @@ function A9(fun, a, b, c, d, e, f, g, h, i) {
 console.warn('Compiled in DEV mode. Follow the advice at https://elm-lang.org/0.19.1/optimize for better performance and smaller assets.');
 
 
-var _List_Nil_UNUSED = { $: 0 };
-var _List_Nil = { $: '[]' };
-
-function _List_Cons_UNUSED(hd, tl) { return { $: 1, a: hd, b: tl }; }
-function _List_Cons(hd, tl) { return { $: '::', a: hd, b: tl }; }
-
-
-var _List_cons = F2(_List_Cons);
-
-function _List_fromArray(arr)
-{
-	var out = _List_Nil;
-	for (var i = arr.length; i--; )
-	{
-		out = _List_Cons(arr[i], out);
-	}
-	return out;
-}
-
-function _List_toArray(xs)
-{
-	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
-	{
-		out.push(xs.a);
-	}
-	return out;
-}
-
-var _List_map2 = F3(function(f, xs, ys)
-{
-	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
-	{
-		arr.push(A2(f, xs.a, ys.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map3 = F4(function(f, xs, ys, zs)
-{
-	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A3(f, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map4 = F5(function(f, ws, xs, ys, zs)
-{
-	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
-{
-	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_sortBy = F2(function(f, xs)
-{
-	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
-		return _Utils_cmp(f(a), f(b));
-	}));
-});
-
-var _List_sortWith = F2(function(f, xs)
-{
-	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
-		var ord = A2(f, a, b);
-		return ord === $elm$core$Basics$EQ ? 0 : ord === $elm$core$Basics$LT ? -1 : 1;
-	}));
-});
-
-
-
 var _JsArray_empty = [];
 
 function _JsArray_singleton(value)
@@ -790,6 +709,87 @@ function _Utils_ap(xs, ys)
 	}
 	return root;
 }
+
+
+
+var _List_Nil_UNUSED = { $: 0 };
+var _List_Nil = { $: '[]' };
+
+function _List_Cons_UNUSED(hd, tl) { return { $: 1, a: hd, b: tl }; }
+function _List_Cons(hd, tl) { return { $: '::', a: hd, b: tl }; }
+
+
+var _List_cons = F2(_List_Cons);
+
+function _List_fromArray(arr)
+{
+	var out = _List_Nil;
+	for (var i = arr.length; i--; )
+	{
+		out = _List_Cons(arr[i], out);
+	}
+	return out;
+}
+
+function _List_toArray(xs)
+{
+	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
+	{
+		out.push(xs.a);
+	}
+	return out;
+}
+
+var _List_map2 = F3(function(f, xs, ys)
+{
+	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
+	{
+		arr.push(A2(f, xs.a, ys.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map3 = F4(function(f, xs, ys, zs)
+{
+	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A3(f, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map4 = F5(function(f, ws, xs, ys, zs)
+{
+	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
+{
+	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_sortBy = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		return _Utils_cmp(f(a), f(b));
+	}));
+});
+
+var _List_sortWith = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		var ord = A2(f, a, b);
+		return ord === $elm$core$Basics$EQ ? 0 : ord === $elm$core$Basics$LT ? -1 : 1;
+	}));
+});
 
 
 
@@ -4355,8 +4355,6 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $elm$core$Basics$EQ = {$: 'EQ'};
-var $elm$core$Basics$LT = {$: 'LT'};
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
@@ -4434,155 +4432,269 @@ var $elm$core$Set$toList = function (_v0) {
 	var dict = _v0.a;
 	return $elm$core$Dict$keys(dict);
 };
+var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
+var $elm$core$Basics$LT = {$: 'LT'};
+var $author$project$Sudoku$Eight = {$: 'Eight'};
+var $author$project$Sudoku$Five = {$: 'Five'};
+var $author$project$Sudoku$Four = {$: 'Four'};
+var $elm$core$Maybe$Just = function (a) {
+	return {$: 'Just', a: a};
+};
+var $author$project$Sudoku$Nine = {$: 'Nine'};
 var $elm$core$Maybe$Nothing = {$: 'Nothing'};
-var $elm$core$Basics$add = _Basics_add;
-var $elm$core$List$foldl = F3(
-	function (func, acc, list) {
-		foldl:
-		while (true) {
-			if (!list.b) {
-				return acc;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				var $temp$func = func,
-					$temp$acc = A2(func, x, acc),
-					$temp$list = xs;
-				func = $temp$func;
-				acc = $temp$acc;
-				list = $temp$list;
-				continue foldl;
-			}
-		}
-	});
-var $elm$core$Basics$gt = _Utils_gt;
-var $elm$core$List$reverse = function (list) {
-	return A3($elm$core$List$foldl, $elm$core$List$cons, _List_Nil, list);
-};
-var $elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							$elm$core$List$foldl,
-							fn,
-							acc,
-							$elm$core$List$reverse(r4)) : A4($elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
-	});
-var $elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4($elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $elm$core$List$concat = function (lists) {
-	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
-};
-var $elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						$elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
-var $elm$core$List$concatMap = F2(
-	function (f, list) {
-		return $elm$core$List$concat(
-			A2($elm$core$List$map, f, list));
-	});
-var $elm$core$Basics$le = _Utils_le;
-var $elm$core$Basics$sub = _Basics_sub;
-var $elm$core$List$rangeHelp = F3(
-	function (lo, hi, list) {
-		rangeHelp:
-		while (true) {
-			if (_Utils_cmp(lo, hi) < 1) {
-				var $temp$lo = lo,
-					$temp$hi = hi - 1,
-					$temp$list = A2($elm$core$List$cons, hi, list);
-				lo = $temp$lo;
-				hi = $temp$hi;
-				list = $temp$list;
-				continue rangeHelp;
-			} else {
-				return list;
-			}
-		}
-	});
-var $elm$core$List$range = F2(
-	function (lo, hi) {
-		return A3($elm$core$List$rangeHelp, lo, hi, _List_Nil);
-	});
-var $author$project$Sudoku$size = 9;
-var $author$project$Sudoku$emptyBoard = A2(
-	$elm$core$List$concatMap,
-	function (idx) {
-		return A2(
-			$elm$core$List$map,
-			function (idy) {
-				return _Utils_Tuple2(
-					{x: idx, y: idy},
-					$elm$core$Maybe$Nothing);
-			},
-			A2($elm$core$List$range, 1, $author$project$Sudoku$size));
-	},
-	A2($elm$core$List$range, 1, $author$project$Sudoku$size));
-var $author$project$Sudoku$init = {sboard: $author$project$Sudoku$emptyBoard};
+var $author$project$Sudoku$One = {$: 'One'};
+var $author$project$Sudoku$Seven = {$: 'Seven'};
+var $author$project$Sudoku$Six = {$: 'Six'};
+var $author$project$Sudoku$Three = {$: 'Three'};
+var $author$project$Sudoku$Two = {$: 'Two'};
+var $author$project$Sudoku$exampleBoard = _List_fromArray(
+	[
+		_Utils_Tuple2(
+		{x: 1, y: 1},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 1, y: 2},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 1, y: 3},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 1, y: 4},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 1, y: 5},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 1, y: 6},
+		$elm$core$Maybe$Just($author$project$Sudoku$Six)),
+		_Utils_Tuple2(
+		{x: 1, y: 7},
+		$elm$core$Maybe$Just($author$project$Sudoku$Three)),
+		_Utils_Tuple2(
+		{x: 1, y: 8},
+		$elm$core$Maybe$Just($author$project$Sudoku$Eight)),
+		_Utils_Tuple2(
+		{x: 1, y: 9},
+		$elm$core$Maybe$Just($author$project$Sudoku$Two)),
+		_Utils_Tuple2(
+		{x: 2, y: 1},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 2, y: 2},
+		$elm$core$Maybe$Just($author$project$Sudoku$Two)),
+		_Utils_Tuple2(
+		{x: 2, y: 3},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 2, y: 4},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 2, y: 5},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 2, y: 6},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 2, y: 7},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 2, y: 8},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 2, y: 9},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 3, y: 1},
+		$elm$core$Maybe$Just($author$project$Sudoku$Four)),
+		_Utils_Tuple2(
+		{x: 3, y: 2},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 3, y: 3},
+		$elm$core$Maybe$Just($author$project$Sudoku$One)),
+		_Utils_Tuple2(
+		{x: 3, y: 4},
+		$elm$core$Maybe$Just($author$project$Sudoku$Two)),
+		_Utils_Tuple2(
+		{x: 3, y: 5},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 3, y: 6},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 3, y: 7},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 3, y: 8},
+		$elm$core$Maybe$Just($author$project$Sudoku$Five)),
+		_Utils_Tuple2(
+		{x: 3, y: 9},
+		$elm$core$Maybe$Just($author$project$Sudoku$Seven)),
+		_Utils_Tuple2(
+		{x: 4, y: 1},
+		$elm$core$Maybe$Just($author$project$Sudoku$Three)),
+		_Utils_Tuple2(
+		{x: 4, y: 2},
+		$elm$core$Maybe$Just($author$project$Sudoku$Four)),
+		_Utils_Tuple2(
+		{x: 4, y: 3},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 4, y: 4},
+		$elm$core$Maybe$Just($author$project$Sudoku$Seven)),
+		_Utils_Tuple2(
+		{x: 4, y: 5},
+		$elm$core$Maybe$Just($author$project$Sudoku$Five)),
+		_Utils_Tuple2(
+		{x: 4, y: 6},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 4, y: 7},
+		$elm$core$Maybe$Just($author$project$Sudoku$Six)),
+		_Utils_Tuple2(
+		{x: 4, y: 8},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 4, y: 9},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 5, y: 1},
+		$elm$core$Maybe$Just($author$project$Sudoku$Five)),
+		_Utils_Tuple2(
+		{x: 5, y: 2},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 5, y: 3},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 5, y: 4},
+		$elm$core$Maybe$Just($author$project$Sudoku$Four)),
+		_Utils_Tuple2(
+		{x: 5, y: 5},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 5, y: 6},
+		$elm$core$Maybe$Just($author$project$Sudoku$One)),
+		_Utils_Tuple2(
+		{x: 5, y: 7},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 5, y: 8},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 5, y: 9},
+		$elm$core$Maybe$Just($author$project$Sudoku$Eight)),
+		_Utils_Tuple2(
+		{x: 6, y: 1},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 6, y: 2},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 6, y: 3},
+		$elm$core$Maybe$Just($author$project$Sudoku$Seven)),
+		_Utils_Tuple2(
+		{x: 6, y: 4},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 6, y: 5},
+		$elm$core$Maybe$Just($author$project$Sudoku$Eight)),
+		_Utils_Tuple2(
+		{x: 6, y: 6},
+		$elm$core$Maybe$Just($author$project$Sudoku$Three)),
+		_Utils_Tuple2(
+		{x: 6, y: 7},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 6, y: 8},
+		$elm$core$Maybe$Just($author$project$Sudoku$Four)),
+		_Utils_Tuple2(
+		{x: 6, y: 9},
+		$elm$core$Maybe$Just($author$project$Sudoku$Five)),
+		_Utils_Tuple2(
+		{x: 7, y: 1},
+		$elm$core$Maybe$Just($author$project$Sudoku$Two)),
+		_Utils_Tuple2(
+		{x: 7, y: 2},
+		$elm$core$Maybe$Just($author$project$Sudoku$Three)),
+		_Utils_Tuple2(
+		{x: 7, y: 3},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 7, y: 4},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 7, y: 5},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 7, y: 6},
+		$elm$core$Maybe$Just($author$project$Sudoku$Four)),
+		_Utils_Tuple2(
+		{x: 7, y: 7},
+		$elm$core$Maybe$Just($author$project$Sudoku$Five)),
+		_Utils_Tuple2(
+		{x: 7, y: 8},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 7, y: 9},
+		$elm$core$Maybe$Just($author$project$Sudoku$One)),
+		_Utils_Tuple2(
+		{x: 8, y: 1},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 8, y: 2},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 8, y: 3},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 8, y: 4},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 8, y: 5},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 8, y: 6},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 8, y: 7},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 8, y: 8},
+		$elm$core$Maybe$Just($author$project$Sudoku$Seven)),
+		_Utils_Tuple2(
+		{x: 8, y: 9},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 9, y: 1},
+		$elm$core$Maybe$Just($author$project$Sudoku$Nine)),
+		_Utils_Tuple2(
+		{x: 9, y: 2},
+		$elm$core$Maybe$Just($author$project$Sudoku$Seven)),
+		_Utils_Tuple2(
+		{x: 9, y: 3},
+		$elm$core$Maybe$Just($author$project$Sudoku$Four)),
+		_Utils_Tuple2(
+		{x: 9, y: 4},
+		$elm$core$Maybe$Just($author$project$Sudoku$Six)),
+		_Utils_Tuple2(
+		{x: 9, y: 5},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 9, y: 6},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 9, y: 7},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 9, y: 8},
+		$elm$core$Maybe$Nothing),
+		_Utils_Tuple2(
+		{x: 9, y: 9},
+		$elm$core$Maybe$Nothing)
+	]);
+var $author$project$Sudoku$init = {sboard: $author$project$Sudoku$exampleBoard};
 var $elm$core$Result$Err = function (a) {
 	return {$: 'Err', a: a};
 };
@@ -4605,9 +4717,7 @@ var $elm$json$Json$Decode$OneOf = function (a) {
 	return {$: 'OneOf', a: a};
 };
 var $elm$core$Basics$False = {$: 'False'};
-var $elm$core$Maybe$Just = function (a) {
-	return {$: 'Just', a: a};
-};
+var $elm$core$Basics$add = _Basics_add;
 var $elm$core$String$all = _String_all;
 var $elm$core$Basics$and = _Basics_and;
 var $elm$core$Basics$append = _Utils_append;
@@ -4631,6 +4741,25 @@ var $elm$json$Json$Decode$indent = function (str) {
 		'\n    ',
 		A2($elm$core$String$split, '\n', str));
 };
+var $elm$core$List$foldl = F3(
+	function (func, acc, list) {
+		foldl:
+		while (true) {
+			if (!list.b) {
+				return acc;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				var $temp$func = func,
+					$temp$acc = A2(func, x, acc),
+					$temp$list = xs;
+				func = $temp$func;
+				acc = $temp$acc;
+				list = $temp$list;
+				continue foldl;
+			}
+		}
+	});
 var $elm$core$List$length = function (xs) {
 	return A3(
 		$elm$core$List$foldl,
@@ -4642,6 +4771,29 @@ var $elm$core$List$length = function (xs) {
 		xs);
 };
 var $elm$core$List$map2 = _List_map2;
+var $elm$core$Basics$le = _Utils_le;
+var $elm$core$Basics$sub = _Basics_sub;
+var $elm$core$List$rangeHelp = F3(
+	function (lo, hi, list) {
+		rangeHelp:
+		while (true) {
+			if (_Utils_cmp(lo, hi) < 1) {
+				var $temp$lo = lo,
+					$temp$hi = hi - 1,
+					$temp$list = A2($elm$core$List$cons, hi, list);
+				lo = $temp$lo;
+				hi = $temp$hi;
+				list = $temp$list;
+				continue rangeHelp;
+			} else {
+				return list;
+			}
+		}
+	});
+var $elm$core$List$range = F2(
+	function (lo, hi) {
+		return A3($elm$core$List$rangeHelp, lo, hi, _List_Nil);
+	});
 var $elm$core$List$indexedMap = F2(
 	function (f, xs) {
 		return A3(
@@ -4672,6 +4824,9 @@ var $elm$core$Char$isDigit = function (_char) {
 };
 var $elm$core$Char$isAlphaNum = function (_char) {
 	return $elm$core$Char$isLower(_char) || ($elm$core$Char$isUpper(_char) || $elm$core$Char$isDigit(_char));
+};
+var $elm$core$List$reverse = function (list) {
+	return A3($elm$core$List$foldl, $elm$core$List$cons, _List_Nil, list);
 };
 var $elm$core$String$uncons = _String_uncons;
 var $elm$json$Json$Decode$errorOneOf = F2(
@@ -4808,6 +4963,7 @@ var $elm$core$Basics$apR = F2(
 var $elm$core$Basics$eq = _Utils_equal;
 var $elm$core$Basics$floor = _Basics_floor;
 var $elm$core$Elm$JsArray$length = _JsArray_length;
+var $elm$core$Basics$gt = _Utils_gt;
 var $elm$core$Basics$max = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) > 0) ? x : y;
@@ -5100,6 +5256,75 @@ var $elm$core$Task$Perform = function (a) {
 };
 var $elm$core$Task$succeed = _Scheduler_succeed;
 var $elm$core$Task$init = $elm$core$Task$succeed(_Utils_Tuple0);
+var $elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							$elm$core$List$foldl,
+							fn,
+							acc,
+							$elm$core$List$reverse(r4)) : A4($elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var $elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4($elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var $elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						$elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
 var $elm$core$Task$andThen = _Scheduler_andThen;
 var $elm$core$Task$map = F2(
 	function (func, taskA) {
@@ -5196,15 +5421,331 @@ var $elm$browser$Browser$sandbox = function (impl) {
 			view: impl.view
 		});
 };
-var $author$project$Sudoku$Eight = {$: 'Eight'};
-var $author$project$Sudoku$Five = {$: 'Five'};
-var $author$project$Sudoku$Four = {$: 'Four'};
-var $author$project$Sudoku$Nine = {$: 'Nine'};
-var $author$project$Sudoku$One = {$: 'One'};
-var $author$project$Sudoku$Seven = {$: 'Seven'};
-var $author$project$Sudoku$Six = {$: 'Six'};
-var $author$project$Sudoku$Three = {$: 'Three'};
-var $author$project$Sudoku$Two = {$: 'Two'};
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$List$concatMap = F2(
+	function (f, list) {
+		return $elm$core$List$concat(
+			A2($elm$core$List$map, f, list));
+	});
+var $author$project$Sudoku$size = 9;
+var $author$project$Sudoku$emptyBoard = A2(
+	$elm$core$List$concatMap,
+	function (idx) {
+		return A2(
+			$elm$core$List$map,
+			function (idy) {
+				return _Utils_Tuple2(
+					{x: idx, y: idy},
+					$elm$core$Maybe$Nothing);
+			},
+			A2($elm$core$List$range, 1, $author$project$Sudoku$size));
+	},
+	A2($elm$core$List$range, 1, $author$project$Sudoku$size));
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $author$project$Sudoku$emptyCells = function (b) {
+	return A2(
+		$elm$core$List$filter,
+		function (_v0) {
+			var val = _v0.b;
+			return _Utils_eq(val, $elm$core$Maybe$Nothing);
+		},
+		b);
+};
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $elm$core$Basics$not = _Basics_not;
+var $author$project$Sudoku$filterOut = F2(
+	function (f, xs) {
+		return A2(
+			$elm$core$List$filter,
+			A2($elm$core$Basics$composeL, $elm$core$Basics$not, f),
+			xs);
+	});
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var $elm$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			$elm$core$List$any,
+			function (a) {
+				return _Utils_eq(a, x);
+			},
+			xs);
+	});
+var $author$project$Sudoku$inBlock = F3(
+	function (_v0, b, v) {
+		var pos = _v0.a;
+		var getBlock = function (x) {
+			return ((x - 1) / 3) | 0;
+		};
+		var block = A2(
+			$elm$core$List$filter,
+			function (_v2) {
+				var p = _v2.a;
+				return _Utils_eq(
+					getBlock(p.x),
+					getBlock(pos.x)) && _Utils_eq(
+					getBlock(p.y),
+					getBlock(pos.y));
+			},
+			b);
+		var blockValues = A2(
+			$elm$core$List$map,
+			function (_v1) {
+				var val = _v1.b;
+				return val;
+			},
+			block);
+		return A2($elm$core$List$member, v, blockValues);
+	});
+var $author$project$Sudoku$inCol = F3(
+	function (_v0, b, v) {
+		var pos = _v0.a;
+		var col = A2(
+			$elm$core$List$filter,
+			function (_v2) {
+				var p = _v2.a;
+				return _Utils_eq(p.y, pos.y);
+			},
+			b);
+		var colValues = A2(
+			$elm$core$List$map,
+			function (_v1) {
+				var val = _v1.b;
+				return val;
+			},
+			col);
+		return A2($elm$core$List$member, v, colValues);
+	});
+var $author$project$Sudoku$inRow = F3(
+	function (_v0, b, v) {
+		var pos = _v0.a;
+		var row = A2(
+			$elm$core$List$filter,
+			function (_v2) {
+				var p = _v2.a;
+				return _Utils_eq(p.x, pos.x);
+			},
+			b);
+		var rowValues = A2(
+			$elm$core$List$map,
+			function (_v1) {
+				var val = _v1.b;
+				return val;
+			},
+			row);
+		return A2($elm$core$List$member, v, rowValues);
+	});
+var $author$project$Sudoku$values = _List_fromArray(
+	[
+		$elm$core$Maybe$Just($author$project$Sudoku$One),
+		$elm$core$Maybe$Just($author$project$Sudoku$Two),
+		$elm$core$Maybe$Just($author$project$Sudoku$Three),
+		$elm$core$Maybe$Just($author$project$Sudoku$Four),
+		$elm$core$Maybe$Just($author$project$Sudoku$Five),
+		$elm$core$Maybe$Just($author$project$Sudoku$Six),
+		$elm$core$Maybe$Just($author$project$Sudoku$Seven),
+		$elm$core$Maybe$Just($author$project$Sudoku$Eight),
+		$elm$core$Maybe$Just($author$project$Sudoku$Nine)
+	]);
+var $author$project$Sudoku$findPossibilities = F2(
+	function (c, b) {
+		var row = A2($author$project$Sudoku$inRow, c, b);
+		var col = A2($author$project$Sudoku$inCol, c, b);
+		var block = A2($author$project$Sudoku$inBlock, c, b);
+		var answer = A2(
+			$author$project$Sudoku$filterOut,
+			function (x) {
+				return _Utils_eq(x, $elm$core$Maybe$Nothing);
+			},
+			A2(
+				$author$project$Sudoku$filterOut,
+				block,
+				A2(
+					$author$project$Sudoku$filterOut,
+					col,
+					A2($author$project$Sudoku$filterOut, row, $author$project$Sudoku$values))));
+		return answer;
+	});
+var $author$project$Sudoku$updateCell = F3(
+	function (b, _v0, value) {
+		var p = _v0.a;
+		return A2(
+			$elm$core$List$map,
+			function (_v1) {
+				var pos = _v1.a;
+				var val = _v1.b;
+				return _Utils_eq(pos, p) ? _Utils_Tuple2(pos, value) : _Utils_Tuple2(pos, val);
+			},
+			b);
+	});
+var $author$project$Sudoku$inferredCells = function (b) {
+	inferredCells:
+	while (true) {
+		var allEmpty = $author$project$Sudoku$emptyCells(b);
+		var infered = A2(
+			$elm$core$List$filter,
+			function (x) {
+				return $elm$core$List$length(
+					A2($author$project$Sudoku$findPossibilities, x, b)) === 1;
+			},
+			allEmpty);
+		var needValue = A2(
+			$elm$core$List$map,
+			function (cell) {
+				return A2($author$project$Sudoku$updateCell, b, cell);
+			},
+			infered);
+		var valuesT = A2(
+			$elm$core$List$concatMap,
+			function (cell) {
+				return A2($author$project$Sudoku$findPossibilities, cell, b);
+			},
+			infered);
+		var boards = A3(
+			$elm$core$List$map2,
+			F2(
+				function (fn, value) {
+					return fn(value);
+				}),
+			needValue,
+			valuesT);
+		if (!boards.b) {
+			return b;
+		} else {
+			var x = boards.a;
+			var $temp$b = x;
+			b = $temp$b;
+			continue inferredCells;
+		}
+	}
+};
+var $author$project$Sudoku$changeCellValue = F3(
+	function (b, _v0, v) {
+		var pos = _v0.a;
+		return A2(
+			$elm$core$List$map,
+			function (_v1) {
+				var p = _v1.a;
+				var val = _v1.b;
+				return _Utils_eq(pos, p) ? _Utils_Tuple2(
+					p,
+					$elm$core$Maybe$Just(v)) : _Utils_Tuple2(p, val);
+			},
+			b);
+	});
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Sudoku$emptyCell = function (b) {
+	return $elm$core$List$head(
+		$elm$core$List$reverse(
+			A2(
+				$elm$core$List$filter,
+				function (_v0) {
+					var val = _v0.b;
+					return _Utils_eq(val, $elm$core$Maybe$Nothing);
+				},
+				b)));
+};
+var $author$project$Sudoku$solveBoard = function (b) {
+	var _v0 = function () {
+		var _v1 = $author$project$Sudoku$emptyCell(b);
+		if (_v1.$ === 'Nothing') {
+			return _Utils_Tuple2(
+				_Utils_Tuple2(
+					{x: 0, y: 0},
+					$elm$core$Maybe$Nothing),
+				true);
+		} else {
+			var c = _v1.a;
+			return _Utils_Tuple2(c, false);
+		}
+	}();
+	var celltofill = _v0.a;
+	var solved = _v0.b;
+	var possibleBoards = function () {
+		var _v3 = A2($author$project$Sudoku$findPossibilities, celltofill, b);
+		if ((_v3.b && (_v3.a.$ === 'Nothing')) && (!_v3.b.b)) {
+			var _v4 = _v3.a;
+			return _List_fromArray(
+				[$author$project$Sudoku$emptyBoard]);
+		} else {
+			var ls = _v3;
+			return A2(
+				$elm$core$List$map,
+				function (x) {
+					if (x.$ === 'Nothing') {
+						return A3($author$project$Sudoku$changeCellValue, b, celltofill, $author$project$Sudoku$One);
+					} else {
+						var v = x.a;
+						return A3($author$project$Sudoku$changeCellValue, b, celltofill, v);
+					}
+				},
+				ls);
+		}
+	}();
+	var nextStep = A2($elm$core$List$map, $author$project$Sudoku$solveBoard, possibleBoards);
+	if (solved) {
+		return $elm$core$Maybe$Just(b);
+	} else {
+		var _v2 = $elm$core$List$head(nextStep);
+		if (_v2.$ === 'Nothing') {
+			return $elm$core$Maybe$Just(b);
+		} else {
+			var c = _v2.a;
+			return c;
+		}
+	}
+};
 var $author$project$Sudoku$strToVal = function (s) {
 	switch (s) {
 		case '1':
@@ -5229,32 +5770,48 @@ var $author$project$Sudoku$strToVal = function (s) {
 			return $elm$core$Maybe$Nothing;
 	}
 };
-var $author$project$Sudoku$updateCell = F3(
-	function (b, _v0, value) {
-		var p = _v0.a;
-		return A2(
-			$elm$core$List$map,
-			function (_v1) {
-				var pos = _v1.a;
-				var val = _v1.b;
-				return _Utils_eq(pos, p) ? _Utils_Tuple2(pos, value) : _Utils_Tuple2(pos, val);
-			},
-			b);
-	});
 var $author$project$Sudoku$update = F2(
 	function (msg, model) {
-		var c = msg.a;
-		var s = msg.b;
-		return _Utils_update(
-			model,
-			{
-				sboard: A3(
-					$author$project$Sudoku$updateCell,
-					model.sboard,
-					c,
-					$author$project$Sudoku$strToVal(s))
-			});
+		switch (msg.$) {
+			case 'EditedCell':
+				var c = msg.a;
+				var s = msg.b;
+				return _Utils_update(
+					model,
+					{
+						sboard: A3(
+							$author$project$Sudoku$updateCell,
+							model.sboard,
+							c,
+							$author$project$Sudoku$strToVal(s))
+					});
+			case 'ClickedSolved':
+				var _v1 = $author$project$Sudoku$solveBoard(model.sboard);
+				if (_v1.$ === 'Nothing') {
+					return _Utils_update(
+						model,
+						{sboard: model.sboard});
+				} else {
+					var newBoard = _v1.a;
+					return _Utils_update(
+						model,
+						{sboard: newBoard});
+				}
+			case 'FillInferred':
+				return _Utils_update(
+					model,
+					{
+						sboard: $author$project$Sudoku$inferredCells(model.sboard)
+					});
+			default:
+				return _Utils_update(
+					model,
+					{sboard: $author$project$Sudoku$emptyBoard});
+		}
 	});
+var $author$project$Sudoku$ClearBoard = {$: 'ClearBoard'};
+var $author$project$Sudoku$ClickedSolved = {$: 'ClickedSolved'};
+var $author$project$Sudoku$FillInferred = {$: 'FillInferred'};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -5267,17 +5824,23 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
 	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $author$project$Sudoku$rows = function (b) {
 	var numRow = A2($elm$core$List$range, 1, 9);
 	var rowCells = A2(
@@ -5305,7 +5868,6 @@ var $elm$html$Html$Events$alwaysStop = function (x) {
 var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
 	return {$: 'MayStopPropagation', a: a};
 };
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
 var $elm$html$Html$Events$stopPropagationOn = F2(
 	function (event, decoder) {
 		return A2(
@@ -5459,11 +6021,34 @@ var $author$project$Sudoku$view = function (model) {
 				$elm$html$Html$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('button')
+						$elm$html$Html$Attributes$class('button'),
+						$elm$html$Html$Events$onClick($author$project$Sudoku$ClickedSolved)
 					]),
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Solve It')
+					])),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('button'),
+						$elm$html$Html$Events$onClick($author$project$Sudoku$FillInferred)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Fill Inferred')
+					])),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('button'),
+						$elm$html$Html$Events$onClick($author$project$Sudoku$ClearBoard)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Clear')
 					]))
 			]));
 };

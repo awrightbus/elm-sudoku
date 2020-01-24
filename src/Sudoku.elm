@@ -83,17 +83,191 @@ type alias Board =
     List Cell
 
 
+exampleBoard : Board
+exampleBoard =
+    [ ( { x = 1, y = 1 }, Nothing )
+    , ( { x = 1, y = 2 }, Nothing )
+    , ( { x = 1, y = 3 }, Nothing )
+    , ( { x = 1, y = 4 }, Nothing )
+    , ( { x = 1, y = 5 }, Nothing )
+    , ( { x = 1, y = 6 }, Just Six )
+    , ( { x = 1, y = 7 }, Just Three )
+    , ( { x = 1, y = 8 }, Just Eight )
+    , ( { x = 1, y = 9 }, Just Two )
+    , ( { x = 2, y = 1 }, Nothing )
+    , ( { x = 2, y = 2 }, Just Two )
+    , ( { x = 2, y = 3 }, Nothing )
+    , ( { x = 2, y = 4 }, Nothing )
+    , ( { x = 2, y = 5 }, Nothing )
+    , ( { x = 2, y = 6 }, Nothing )
+    , ( { x = 2, y = 7 }, Nothing )
+    , ( { x = 2, y = 8 }, Nothing )
+    , ( { x = 2, y = 9 }, Nothing )
+    , ( { x = 3, y = 1 }, Just Four )
+    , ( { x = 3, y = 2 }, Nothing )
+    , ( { x = 3, y = 3 }, Just One )
+    , ( { x = 3, y = 4 }, Just Two )
+    , ( { x = 3, y = 5 }, Nothing )
+    , ( { x = 3, y = 6 }, Nothing )
+    , ( { x = 3, y = 7 }, Nothing )
+    , ( { x = 3, y = 8 }, Just Five )
+    , ( { x = 3, y = 9 }, Just Seven )
+    , ( { x = 4, y = 1 }, Just Three )
+    , ( { x = 4, y = 2 }, Just Four )
+    , ( { x = 4, y = 3 }, Nothing )
+    , ( { x = 4, y = 4 }, Just Seven )
+    , ( { x = 4, y = 5 }, Just Five )
+    , ( { x = 4, y = 6 }, Nothing )
+    , ( { x = 4, y = 7 }, Just Six )
+    , ( { x = 4, y = 8 }, Nothing )
+    , ( { x = 4, y = 9 }, Nothing )
+    , ( { x = 5, y = 1 }, Just Five )
+    , ( { x = 5, y = 2 }, Nothing )
+    , ( { x = 5, y = 3 }, Nothing )
+    , ( { x = 5, y = 4 }, Just Four )
+    , ( { x = 5, y = 5 }, Nothing )
+    , ( { x = 5, y = 6 }, Just One )
+    , ( { x = 5, y = 7 }, Nothing )
+    , ( { x = 5, y = 8 }, Nothing )
+    , ( { x = 5, y = 9 }, Just Eight )
+    , ( { x = 6, y = 1 }, Nothing )
+    , ( { x = 6, y = 2 }, Nothing )
+    , ( { x = 6, y = 3 }, Just Seven )
+    , ( { x = 6, y = 4 }, Nothing )
+    , ( { x = 6, y = 5 }, Just Eight )
+    , ( { x = 6, y = 6 }, Just Three )
+    , ( { x = 6, y = 7 }, Nothing )
+    , ( { x = 6, y = 8 }, Just Four )
+    , ( { x = 6, y = 9 }, Just Five )
+    , ( { x = 7, y = 1 }, Just Two )
+    , ( { x = 7, y = 2 }, Just Three )
+    , ( { x = 7, y = 3 }, Nothing )
+    , ( { x = 7, y = 4 }, Nothing )
+    , ( { x = 7, y = 5 }, Nothing )
+    , ( { x = 7, y = 6 }, Just Four )
+    , ( { x = 7, y = 7 }, Just Five )
+    , ( { x = 7, y = 8 }, Nothing )
+    , ( { x = 7, y = 9 }, Just One )
+    , ( { x = 8, y = 1 }, Nothing )
+    , ( { x = 8, y = 2 }, Nothing )
+    , ( { x = 8, y = 3 }, Nothing )
+    , ( { x = 8, y = 4 }, Nothing )
+    , ( { x = 8, y = 5 }, Nothing )
+    , ( { x = 8, y = 6 }, Nothing )
+    , ( { x = 8, y = 7 }, Nothing )
+    , ( { x = 8, y = 8 }, Just Seven )
+    , ( { x = 8, y = 9 }, Nothing )
+    , ( { x = 9, y = 1 }, Just Nine )
+    , ( { x = 9, y = 2 }, Just Seven )
+    , ( { x = 9, y = 3 }, Just Four )
+    , ( { x = 9, y = 4 }, Just Six )
+    , ( { x = 9, y = 5 }, Nothing )
+    , ( { x = 9, y = 6 }, Nothing )
+    , ( { x = 9, y = 7 }, Nothing )
+    , ( { x = 9, y = 8 }, Nothing )
+    , ( { x = 9, y = 9 }, Nothing )
+    ]
 
+
+inferredCells : Board -> Board
+inferredCells b =
+    let
+        allEmpty =
+            emptyCells b
+
+        infered =
+            List.filter
+                (\x -> List.length (findPossibilities x b) == 1)
+                allEmpty
+
+        valuesT =
+            List.concatMap (\cell -> findPossibilities cell b) infered
+
+        needValue =
+            List.map (\cell -> updateCell b cell) infered
+
+        boards =
+            List.map2 (\fn value -> fn value) needValue valuesT
+    in
+    case boards of
+        [] ->
+            b
+
+        x :: _ ->
+            inferredCells x
+
+
+solveBoard : Board -> Maybe Board
+solveBoard b =
+    let
+        ( celltofill, solved ) =
+            case emptyCell b of
+                Nothing ->
+                    ( ( { x = 0, y = 0 }, Nothing ), True )
+
+                Just c ->
+                    ( c, False )
+
+        possibleBoards =
+            case findPossibilities celltofill b of
+                [ Nothing ] ->
+                    [ emptyBoard ]
+
+                ls ->
+                    List.map
+                        (\x ->
+                            case x of
+                                Nothing ->
+                                    changeCellValue b celltofill One
+
+                                Just v ->
+                                    changeCellValue b celltofill v
+                        )
+                        ls
+
+        nextStep =
+            List.map solveBoard possibleBoards
+    in
+    if solved then
+        Just b
+
+    else
+        case List.head nextStep of
+            Nothing ->
+                Just b
+
+            Just c ->
+                c
+
+
+isSolved : Board -> Bool
+isSolved b =
+    case emptyCell b of
+        Nothing ->
+            if hasConflicts b then
+                False
+
+            else
+                True
+
+        Just c ->
+            False
+
+
+
+-- findPossibilities
+-- map changeValue c b findPossibilities list of boards possible
+-- filter allBoards that
 -- def solve(bo):
---     find = find_empty(bo)
+--     find = find_empty(bo) 1.Find Empty Cell
 --     if not find:
 --         return True
 --     else:
 --         row, col = find
---     for i in range(1,10):
---         if valid(bo, i, (row, col)):
---             bo[row][col] = i
---             if solve(bo):
+--     for i in range(1,10): 2. Find all values for that cell
+--         if valid(bo, i, (row, col)): 3. that are valid
+--             bo[row][col] = i 4.Create boards with those values
+--             if solve(bo): recurse
 --                 return True
 --             bo[row][col] = 0
 --     return False
@@ -126,14 +300,19 @@ cols b =
             List.range 1 9
 
         rowCells =
-            List.map (\idy -> List.map (\( pos, _ ) -> pos.y == idy) b) numRow
+            List.map (\idy -> List.filter (\( pos, _ ) -> pos.y == idy) b) numRow
     in
     rowCells
 
 
 emptyCell : Board -> Maybe Cell
 emptyCell b =
-    List.head (List.filter (\( _, val ) -> val == Nothing) b)
+    List.reverse (List.filter (\( _, val ) -> val == Nothing) b) |> List.head
+
+
+emptyCells : Board -> List Cell
+emptyCells b =
+    List.filter (\( _, val ) -> val == Nothing) b
 
 
 changeCellValue : Board -> Cell -> Value -> Board
@@ -160,11 +339,20 @@ findPossibilities c b =
 
         block =
             inBlock c b
+
+        answer =
+            values
+                |> filterOut row
+                |> filterOut col
+                |> filterOut block
+                |> filterOut (\x -> x == Nothing)
     in
-    values
-        |> filterOut row
-        |> filterOut col
-        |> filterOut block
+    answer
+
+
+hasConflicts : Board -> Bool
+hasConflicts b =
+    True
 
 
 filterOut : (a -> Bool) -> List a -> List a
@@ -290,7 +478,7 @@ type alias Model =
 
 init : Model
 init =
-    { sboard = emptyBoard
+    { sboard = exampleBoard
     }
 
 
@@ -302,12 +490,17 @@ view model =
             [ class "header" ]
             [ Html.text "Elm Sudoku Solver" ]
         , showBoard model.sboard
-        , Html.button [ class "button" ] [ Html.text "Solve It" ]
+        , Html.button [ class "button", Html.Events.onClick ClickedSolved ] [ Html.text "Solve It" ]
+        , Html.button [ class "button", Html.Events.onClick FillInferred ] [ Html.text "Fill Inferred" ]
+        , Html.button [ class "button", Html.Events.onClick ClearBoard ] [ Html.text "Clear" ]
         ]
 
 
 type Msg
     = EditedCell Cell String
+    | ClickedSolved
+    | FillInferred
+    | ClearBoard
 
 
 update : Msg -> Model -> Model
@@ -315,6 +508,20 @@ update msg model =
     case msg of
         EditedCell c s ->
             { model | sboard = updateCell model.sboard c (strToVal s) }
+
+        ClickedSolved ->
+            case solveBoard model.sboard of
+                Nothing ->
+                    { model | sboard = model.sboard }
+
+                Just newBoard ->
+                    { model | sboard = newBoard }
+
+        FillInferred ->
+            { model | sboard = inferredCells model.sboard }
+
+        ClearBoard ->
+            { model | sboard = emptyBoard }
 
 
 updateCell : Board -> Cell -> Maybe Value -> Board
