@@ -189,6 +189,34 @@ solveBoard b =
             solveBoard x
 
 
+giveHint : Board -> Board
+giveHint b =
+    let
+        allEmpty =
+            emptyCells b
+
+        inferred =
+            List.filter
+                (\x -> List.length (findPossibilities x b) == 1)
+                allEmpty
+
+        valuesT =
+            List.concatMap (\cell -> findPossibilities cell b) inferred
+
+        needValue =
+            List.map (\cell -> updateCell b cell) inferred
+
+        boards =
+            List.map2 (\fn value -> fn value) needValue valuesT
+    in
+    case List.head boards of
+        Nothing ->
+            b
+
+        Just board ->
+            board
+
+
 size : Int
 size =
     9
@@ -388,6 +416,7 @@ view model =
             [ Html.text "Elm Sudoku Solver" ]
         , showBoard model.sboard
         , Html.button [ class "button", Html.Events.onClick ClickedSolved ] [ Html.text "Solve It" ]
+        , Html.button [ class "button", Html.Events.onClick GiveHint ] [ Html.text "Give Hint" ]
         , Html.button [ class "button", Html.Events.onClick ClearBoard ] [ Html.text "Clear" ]
         ]
 
@@ -396,6 +425,7 @@ type Msg
     = EditedCell Cell String
     | ClickedSolved
     | ClearBoard
+    | GiveHint
 
 
 update : Msg -> Model -> Model
@@ -409,6 +439,9 @@ update msg model =
 
         ClearBoard ->
             { model | sboard = emptyBoard }
+
+        GiveHint ->
+            { model | sboard = giveHint model.sboard }
 
 
 updateCell : Board -> Cell -> Maybe Value -> Board

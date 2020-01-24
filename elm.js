@@ -5604,6 +5604,15 @@ var $author$project$Sudoku$findPossibilities = F2(
 				A2($author$project$Sudoku$filterOut, row, $author$project$Sudoku$values)));
 		return answer;
 	});
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
 var $author$project$Sudoku$updateCell = F3(
 	function (b, _v0, value) {
 		var p = _v0.a;
@@ -5616,6 +5625,43 @@ var $author$project$Sudoku$updateCell = F3(
 			},
 			b);
 	});
+var $author$project$Sudoku$giveHint = function (b) {
+	var allEmpty = $author$project$Sudoku$emptyCells(b);
+	var inferred = A2(
+		$elm$core$List$filter,
+		function (x) {
+			return $elm$core$List$length(
+				A2($author$project$Sudoku$findPossibilities, x, b)) === 1;
+		},
+		allEmpty);
+	var needValue = A2(
+		$elm$core$List$map,
+		function (cell) {
+			return A2($author$project$Sudoku$updateCell, b, cell);
+		},
+		inferred);
+	var valuesT = A2(
+		$elm$core$List$concatMap,
+		function (cell) {
+			return A2($author$project$Sudoku$findPossibilities, cell, b);
+		},
+		inferred);
+	var boards = A3(
+		$elm$core$List$map2,
+		F2(
+			function (fn, value) {
+				return fn(value);
+			}),
+		needValue,
+		valuesT);
+	var _v0 = $elm$core$List$head(boards);
+	if (_v0.$ === 'Nothing') {
+		return b;
+	} else {
+		var board = _v0.a;
+		return board;
+	}
+};
 var $author$project$Sudoku$solveBoard = function (b) {
 	solveBoard:
 	while (true) {
@@ -5702,14 +5748,21 @@ var $author$project$Sudoku$update = F2(
 					{
 						sboard: $author$project$Sudoku$solveBoard(model.sboard)
 					});
-			default:
+			case 'ClearBoard':
 				return _Utils_update(
 					model,
 					{sboard: $author$project$Sudoku$emptyBoard});
+			default:
+				return _Utils_update(
+					model,
+					{
+						sboard: $author$project$Sudoku$giveHint(model.sboard)
+					});
 		}
 	});
 var $author$project$Sudoku$ClearBoard = {$: 'ClearBoard'};
 var $author$project$Sudoku$ClickedSolved = {$: 'ClickedSolved'};
+var $author$project$Sudoku$GiveHint = {$: 'GiveHint'};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -5925,6 +5978,17 @@ var $author$project$Sudoku$view = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Solve It')
+					])),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('button'),
+						$elm$html$Html$Events$onClick($author$project$Sudoku$GiveHint)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Give Hint')
 					])),
 				A2(
 				$elm$html$Html$button,
