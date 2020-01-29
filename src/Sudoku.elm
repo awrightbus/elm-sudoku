@@ -161,32 +161,26 @@ exampleBoard =
     ]
 
 
-solveBoard : Board -> Board
-solveBoard b =
-    let
-        allEmpty =
-            emptyCells b
+solve : Board -> ( Bool, Board )
+solve b =
+    case emptyCell b of
+        Nothing ->
+            ( True, b )
 
-        inferred =
-            List.filter
-                (\x -> List.length (findPossibilities x b) == 1)
-                allEmpty
+        Just cell ->
+            let
+                solvableBoards =
+                    findPossibilities cell b
+                        |> List.map (\value -> updateCell b cell value)
+                        |> List.map solve
+                        |> List.filter (\( boardSolvability, _ ) -> boardSolvability == True)
+            in
+            case List.head solvableBoards of
+                Nothing ->
+                    ( False, b )
 
-        valuesT =
-            List.concatMap (\cell -> findPossibilities cell b) inferred
-
-        needValue =
-            List.map (\cell -> updateCell b cell) inferred
-
-        boards =
-            List.map2 (\fn value -> fn value) needValue valuesT
-    in
-    case boards of
-        [] ->
-            b
-
-        x :: _ ->
-            solveBoard x
+                Just board ->
+                    board
 
 
 giveHint : Board -> Board
@@ -227,6 +221,7 @@ emptyBoard =
     List.concatMap (\idx -> List.map (\idy -> ( { x = idx, y = idy }, Nothing )) (List.range 1 size)) (List.range 1 size)
 
 
+rows : Board -> List (List Cell)
 rows b =
     let
         numRow =
@@ -234,17 +229,6 @@ rows b =
 
         rowCells =
             List.map (\idx -> List.filter (\( pos, _ ) -> pos.x == idx) b) numRow
-    in
-    rowCells
-
-
-cols b =
-    let
-        numRow =
-            List.range 1 9
-
-        rowCells =
-            List.map (\idy -> List.filter (\( pos, _ ) -> pos.y == idy) b) numRow
     in
     rowCells
 
@@ -435,7 +419,12 @@ update msg model =
             { model | sboard = updateCell model.sboard c (strToVal s) }
 
         ClickedSolved ->
-            { model | sboard = solveBoard model.sboard }
+            case solve model.sboard of
+                ( False, _ ) ->
+                    model
+
+                ( True, solved ) ->
+                    { model | sboard = solved }
 
         ClearBoard ->
             { model | sboard = emptyBoard }

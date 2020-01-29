@@ -5662,44 +5662,44 @@ var $author$project$Sudoku$giveHint = function (b) {
 		return board;
 	}
 };
-var $author$project$Sudoku$solveBoard = function (b) {
-	solveBoard:
-	while (true) {
-		var allEmpty = $author$project$Sudoku$emptyCells(b);
-		var inferred = A2(
+var $author$project$Sudoku$emptyCell = function (b) {
+	return $elm$core$List$head(
+		$elm$core$List$reverse(
+			A2(
+				$elm$core$List$filter,
+				function (_v0) {
+					var val = _v0.b;
+					return _Utils_eq(val, $elm$core$Maybe$Nothing);
+				},
+				b)));
+};
+var $author$project$Sudoku$solve = function (b) {
+	var _v0 = $author$project$Sudoku$emptyCell(b);
+	if (_v0.$ === 'Nothing') {
+		return _Utils_Tuple2(true, b);
+	} else {
+		var cell = _v0.a;
+		var solvableBoards = A2(
 			$elm$core$List$filter,
-			function (x) {
-				return $elm$core$List$length(
-					A2($author$project$Sudoku$findPossibilities, x, b)) === 1;
+			function (_v2) {
+				var boardSolvability = _v2.a;
+				return boardSolvability;
 			},
-			allEmpty);
-		var needValue = A2(
-			$elm$core$List$map,
-			function (cell) {
-				return A2($author$project$Sudoku$updateCell, b, cell);
-			},
-			inferred);
-		var valuesT = A2(
-			$elm$core$List$concatMap,
-			function (cell) {
-				return A2($author$project$Sudoku$findPossibilities, cell, b);
-			},
-			inferred);
-		var boards = A3(
-			$elm$core$List$map2,
-			F2(
-				function (fn, value) {
-					return fn(value);
-				}),
-			needValue,
-			valuesT);
-		if (!boards.b) {
-			return b;
+			A2(
+				$elm$core$List$map,
+				$author$project$Sudoku$solve,
+				A2(
+					$elm$core$List$map,
+					function (value) {
+						return A3($author$project$Sudoku$updateCell, b, cell, value);
+					},
+					A2($author$project$Sudoku$findPossibilities, cell, b))));
+		var _v1 = $elm$core$List$head(solvableBoards);
+		if (_v1.$ === 'Nothing') {
+			return _Utils_Tuple2(false, b);
 		} else {
-			var x = boards.a;
-			var $temp$b = x;
-			b = $temp$b;
-			continue solveBoard;
+			var board = _v1.a;
+			return board;
 		}
 	}
 };
@@ -5743,11 +5743,15 @@ var $author$project$Sudoku$update = F2(
 							$author$project$Sudoku$strToVal(s))
 					});
 			case 'ClickedSolved':
-				return _Utils_update(
-					model,
-					{
-						sboard: $author$project$Sudoku$solveBoard(model.sboard)
-					});
+				var _v1 = $author$project$Sudoku$solve(model.sboard);
+				if (!_v1.a) {
+					return model;
+				} else {
+					var solved = _v1.b;
+					return _Utils_update(
+						model,
+						{sboard: solved});
+				}
 			case 'ClearBoard':
 				return _Utils_update(
 					model,
